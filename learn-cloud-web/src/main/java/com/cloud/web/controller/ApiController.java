@@ -1,6 +1,7 @@
 package com.cloud.web.controller;
 
 import com.cloud.entity.CustomEventInfo;
+import com.cloud.exceptions.ApiException;
 import com.cloud.listeners.event.CustomEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -42,6 +43,11 @@ public class ApiController {
     @GetMapping("/webFilter")
     public void webFilter() {
         log.info("enter web filter method and do something");
+    }
+
+    @GetMapping("/throwApi")
+    public void throwApiException() {
+        throw new ApiException("接口处理异常");
     }
 
 }

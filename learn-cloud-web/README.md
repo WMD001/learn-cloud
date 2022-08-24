@@ -491,3 +491,49 @@ public class CustomCommandLineRunner implements CommandLineRunner {
 
 两个runner接口都只有一个**run**方法，方法启动时机在**ApplicationStarted**事件之后，**ApplicationReady**事件之前，
 如果runner执行发生异常，则不会执行**ApplicationReady**事件处理
+
+### 自定义异常 + 全局异常处理
+
+```java
+package com.cloud.exceptions;
+
+/**
+ * @author Wang
+ * @date 2022/8/24
+ */
+public class ApiException extends RuntimeException{
+
+    public ApiException(String message) {
+        super(message);
+    }
+}
+```
+
+全局处理类
+
+```java
+package com.cloud.config;
+
+import com.cloud.exceptions.ApiException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * @author Wang
+ * @date 2022/8/24
+ */
+@Slf4j
+@ControllerAdvice
+public class GlobalExceptionHandle {
+
+    @ResponseBody
+    @ExceptionHandler(ApiException.class)
+    public String handleApiException(ApiException apiException) {
+        log.error("捕获到接口异常：" + apiException.getMessage());
+        return apiException.getMessage();
+    }
+
+}
+```
