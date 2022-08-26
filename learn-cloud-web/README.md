@@ -3,6 +3,7 @@
 Spring Cloud 学习
 
 ## Web部分
+
 对于应用的web请求的处理和返回
 
 ### Web 请求
@@ -41,6 +42,7 @@ download
 > com.cloud.interceptor
 
 创建拦截器类
+
 ```java
 package com.cloud.interceptor;
 
@@ -298,7 +300,6 @@ public class LearnCloudWebApplication {
 }
 ```
 
-
 ### 监听器（事件发布/订阅） Listener
 
 spring boot 启动事件
@@ -393,7 +394,7 @@ import org.springframework.stereotype.Component;
 public class CustomEventListener implements ApplicationListener<CustomEvent> {
     @Override
     public void onApplicationEvent(CustomEvent event) {
-        log.info("Get Custom Event : " + event.getInfo().toString() );
+        log.info("Get Custom Event : " + event.getInfo().toString());
     }
 }
 ```
@@ -501,7 +502,7 @@ package com.cloud.exceptions;
  * @author Wang
  * @date 2022/8/24
  */
-public class ApiException extends RuntimeException{
+public class ApiException extends RuntimeException {
 
     public ApiException(String message) {
         super(message);
@@ -535,5 +536,198 @@ public class GlobalExceptionHandle {
         return apiException.getMessage();
     }
 
+}
+```
+
+### validation 参数校验 + 全局异常处理
+
+添加依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+
+在实体类字段上添加校验注解
+
+```java
+package com.cloud.validate;
+
+import com.cloud.validate.groups.SignIn;
+import com.cloud.validate.groups.SignUp;
+import lombok.Data;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
+/**
+ * @author Wang
+ * @date 2022/8/25
+ */
+@Data
+public class User {
+
+    @NotEmpty(message = "用户名不能为空", groups = {SignIn.class, SignUp.class})
+    @Size(min = 3, message = "最少需要3个字符")
+    private String userName;
+
+    @NotEmpty(message = "密码不能为空", groups = {SignIn.class, SignUp.class})
+    @Size(min = 8, max = 16, message = "密码为8-16位的字符串", groups = {SignIn.class, SignUp.class})
+    private String password;
+
+    @NotEmpty(groups = {SignUp.class})
+    @Size(min = 11, max = 11, message = "手机号格式错误")
+    private String phoneNumber;
+
+    @NotEmpty(groups = {SignUp.class})
+    private String email;
+
+}
+```
+
+接口上启用注解
+
+```java
+package com.cloud.web.controller;
+
+import com.cloud.validate.User;
+import com.cloud.validate.groups.SignIn;
+import com.cloud.validate.groups.SignUp;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.groups.Default;
+
+/**
+ * @author Wang
+ * @date 2022/8/25
+ */
+@RestController
+public class UserController {
+
+    /**
+     * 模拟登录
+     *
+     * @param user user
+     * @return true
+     */
+    @PostMapping("/singIn")
+    public boolean singIn(@RequestBody @Validated({Default.class, SignIn.class}) User user) {
+        return true;
+    }
+
+    @PostMapping("/signUp")
+    public boolean signUp(@RequestBody @Validated({Default.class, SignUp.class}) User user) {
+        return true;
+    }
+
+}
+```
+
+#### 分组校验
+
+注解支持分组，groups 属性指定分组，参数是一个空的接口，例如
+
+```java
+package com.cloud.validate.groups;
+
+/**
+ * 登录验证
+ *
+ * @author Wang
+ * @date 2022/8/25
+ */
+public interface SignIn {
+}
+```
+
+使用它
+
+`@NotNull(groups={SignIn.class})`
+
+没有分组时，默认存在 `Default.class` 分组
+
+#### 自定义注解验证
+
+> 自定义注解判断Map参数中是否包含key
+
+##### 自定义注解
+
+> `@Constraint` 指定解析注解的处理类
+
+```java
+package com.cloud.validate.annotation;
+
+import com.cloud.validate.HasKeyValidator;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.groups.Default;
+import java.lang.annotation.*;
+
+/**
+ * 自定义注解
+ * <code>@Constraint</code> 指定解析注解的处理类
+ *
+ * @author Wang
+ * @date 2022/8/26
+ */
+@Documented
+@Constraint(validatedBy = HasKeyValidator.class)
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface HasKey {
+
+    String message() default "{com.cloud.validate.annotation.HasKey.message}";
+    Class<?>[] groups() default {};
+    String[] values() default {};
+    Class<? extends Payload>[] payload() default {};
+
+}
+```
+
+##### 注解验证处理类
+
+```java
+package com.cloud.validate;
+
+import com.cloud.validate.annotation.HasKey;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * 注解处理类实现ConstraintValidator接口，两个泛型分别是注解，注解支持的参数类型
+ * @author Wang
+ * @date 2022/8/26
+ */
+public class HasKeyValidator implements ConstraintValidator<HasKey, Map<String, Object>> {
+
+    private String[] keys = new String[]{};
+
+    @Override
+    public void initialize(HasKey hasKey) {
+        keys = hasKey.values();
+    }
+
+    @Override
+    public boolean isValid(Map<String, Object> map, ConstraintValidatorContext constraintValidatorContext) {
+        if (map != null) {
+            Set<?> objects = map.keySet();
+            for (String key : keys) {
+                if (!objects.contains(key)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }
 ```
