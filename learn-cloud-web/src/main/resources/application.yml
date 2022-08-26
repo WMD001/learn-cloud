@@ -2,3 +2,13 @@ server:
   port: 8001
   servlet:
     context-path: /web
+
+spring:
+  application:
+    name: web-server
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka/eureka

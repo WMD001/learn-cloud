@@ -1,0 +1,17 @@
+server:
+  port: 8010
+  servlet:
+    context-path: /eureka
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://127.0.0.1:8010/eureka
+    fetch-registry: false
+    healthcheck:
+      enabled: false
+  instance:
+    hostname: localhost
+spring:
+  application:
+    name: eureka-server
