@@ -124,3 +124,39 @@ spring:
 ```yaml
 - XForwardedRemoteAddr=192.168.1.1/24
 ```
+
+## filters 过滤器
+
+### AddRequestHeader
+
+### AddRequestParameter
+
+### AddResponseHeader
+
+### DedupeResponseHeader
+
+### RequestLateLimiter
+
+### RateLimiter
+
+### RedirectTo
+
+### RemoveRequestHeader
+
+### RemoveResponseHeader
+
+### RemoveRequestParameter
+
+### RequestHeaderSize
+
+### RewritePath
+
+### RewriteLocationResponseHeader
+
+### RewriteResponseHeader
+
+### SaveSession
+
+### StripPrefix
+
+过滤前缀，会将前缀从请求中删除，例如设置 `- StripPrefix=/gateway/`，请求是 /gateway/web，由于设置了过滤会把/gateway删除，变成/web

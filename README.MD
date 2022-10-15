@@ -15,4 +15,5 @@ spring cloud 学习以及使用
 | web-server       | /web        | 8001        |
 | cache-server     | /cache      | 8002        |
 | eureka-server    | /eureka     | 8010        |
-| gateway-server   | /           | 8020        |
+| gateway-server   | /gateway    | 8020        |
+| auth-server      | /auth       | 8030        |

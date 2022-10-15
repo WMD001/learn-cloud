@@ -7,8 +7,10 @@ spring:
         - id: web-server
           uri: http://localhost:8001
           predicates:
-            - Path=/web/**
+            - Path=/gateway/web/**
             - Query=web
+          filters:
+            - StripPrefix=1
 eureka:
   instance:
     hostname: localhost
@@ -17,3 +19,5 @@ eureka:
       defaultZone: http://localhost:8010/eureka/eureka
 server:
   port: 8020
+  servlet:
+    context-path: /gateway
