@@ -17,3 +17,4 @@ spring cloud 学习以及使用
 | eureka-server    | /eureka     | 8010        |
 | gateway-server   | /gateway    | 8020        |
 | auth-server      | /auth       | 8030        |
+| security-server  | /security   | 8040        |

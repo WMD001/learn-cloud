@@ -1,0 +1,12 @@
+server:
+  port: 8040
+  servlet:
+    context-path: /security
+
+spring:
+  application:
+    name: security-server
+  security:
+    user:
+      name: admin1
+      password: $2a$10$mftS9iuLiCqEvufy6p6XAOk7O7UpNk7QE6dzqlh0VVzUyyXhKkseK
