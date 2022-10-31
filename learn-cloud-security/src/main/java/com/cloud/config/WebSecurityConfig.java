@@ -1,5 +1,6 @@
 package com.cloud.config;
 
+import com.cloud.CustomUserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -8,14 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * security 配置
@@ -28,7 +22,10 @@ import java.io.IOException;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CustomUserDetailsServiceImpl customUserDetailsService;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -48,7 +45,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     throw exception;
                 }))
                 // set permitAll for all URLs associated with Form Login
-                .permitAll();
+                .permitAll()
+                .and()
+                .userDetailsService(customUserDetailsService);
 
         // http basic 校验
 ///        http.httpBasic()
@@ -62,14 +61,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 // enable in memory based authentication with a user named "user" and "admin"
-                .inMemoryAuthentication().passwordEncoder(bCryptPasswordEncoder)
+                .inMemoryAuthentication().passwordEncoder(passwordEncoder)
                 .withUser("user")
-                .password(bCryptPasswordEncoder.encode("password"))
+                .password(passwordEncoder.encode("password"))
                 .roles("USER")
                 .and()
                 .withUser("admin")
-                .password(bCryptPasswordEncoder.encode("password"))
+                .password(passwordEncoder.encode("password"))
                 .roles("USER", "ADMIN");
+
+
     }
 
 }
