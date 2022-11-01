@@ -1,6 +1,5 @@
 package com.cloud.config;
 
-import com.cloud.CustomUserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -10,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 /**
  * security 配置
@@ -23,6 +24,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private CustomUserDetailsServiceImpl customUserDetailsService;
@@ -59,17 +62,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                // enable in memory based authentication with a user named "user" and "admin"
-                .inMemoryAuthentication().passwordEncoder(passwordEncoder)
-                .withUser("user")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER")
-                .and()
-                .withUser("admin")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER", "ADMIN");
+///        auth
+//                // enable in memory based authentication with a user named "user" and "admin"
+//                .inMemoryAuthentication().passwordEncoder(passwordEncoder)
+//                .withUser("user")
+//                .password(passwordEncoder.encode("password"))
+//                .roles("USER")
+//                .authorities("USER")
+//                .and()
+//                .withUser("admin")
+//                .password(passwordEncoder.encode("password"))
+//                .roles("USER", "ADMIN")
+//                .authorities("ADMIN");
 
+        // 基于jdbc的用户存储
+///        auth.jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .usersByUsernameQuery("select username, password from users where username = ?")
+//                .authoritiesByUsernameQuery("select * from user_authorities where username = ?")
+//                .passwordEncoder(passwordEncoder);
+
+        // 使用自定义用户存储
+        auth.userDetailsService(customUserDetailsService)
+                .passwordEncoder(passwordEncoder);
 
     }
 
