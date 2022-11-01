@@ -6,7 +6,7 @@ spring cloud 学习以及使用
 - learn-cloud-cache(spring cache / redis)
 - learn-cloud-server(Eureka / Config Server / openfeign ribbon)
 - learn-cloud-nacos(spring cloud alibaba / openfeign)
-- learn-cloud-zuul (zuul 已被spring cloud 移除)
+- ~~learn-cloud-zuul (zuul 已被spring cloud 移除)~~
 - learn-cloud-gateway
 - learn-cloud-message(kafka / rabbitmq / rocketmq)
 
