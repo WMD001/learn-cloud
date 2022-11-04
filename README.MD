@@ -1,7 +1,7 @@
 spring cloud 学习以及使用
 学习目标包括
 - learn-cloud-starer
-- learn-cloud-auth(spring security)
+- learn-cloud-security(spring security)
 - learn-cloud-data(spring boot jpa / mybatis / mybatis-plus )
 - learn-cloud-cache(spring cache / redis)
 - learn-cloud-server(Eureka / Config Server / openfeign ribbon)
