@@ -1,5 +1,6 @@
 spring cloud 学习以及使用
 学习目标包括
+
 - learn-cloud-starer
 - learn-cloud-security(spring security)
 - learn-cloud-data(spring boot jpa / mybatis / mybatis-plus )
@@ -14,6 +15,7 @@ spring cloud 学习以及使用
 |------------------|-------------|-------------|
 | web-server       | /web        | 8001        |
 | cache-server     | /cache      | 8002        |
+|data-server| /data | 8003|
 | eureka-server    | /eureka     | 8010        |
 | gateway-server   | /gateway    | 8020        |
 | auth-server      | /auth       | 8030        |
