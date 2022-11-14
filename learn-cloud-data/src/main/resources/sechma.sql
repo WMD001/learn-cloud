@@ -1,0 +1,9 @@
+insert into db_user values('9D1b9Af5-dC14-28d6-fB87-c86FCAcdA23D', 'Kenneth Harris','uoxgvqbc');
+insert into db_user values('b1Dcbc2D-12f8-AC86-4ebc-402c173B505A', 'Thomas Taylor','dqvbii');
+insert into db_user values('BB45BA9D-dB84-ECeB-5f2b-8DEe3D6218E4', 'Brian Hall','jvqqgr');
+insert into db_user values('CF9AdF4a-B6C7-F878-E8Db-AA911A821380', 'Cynthia Jackson','ywbrxooz');
+insert into db_user values('77FD56Ec-dB89-fC1b-65C6-bFD65DE5FD42', 'Patricia Clark','zpappuo');
+insert into db_user values('d0d1F5ED-7D7a-a3B3-e14e-bede8ed86eAD', 'Donald Lee','zrbnjs');
+insert into db_user values('6CD1C9fd-E60A-7CdA-aaFD-4C5FdF9C3b4E', 'Jose Anderson','ksnhkkai');
+insert into db_user values('d54e556D-dd4E-9c7D-F2C1-e8A43c8B22b6', 'Eric Taylor','gwoxpmjv');
+insert into db_user values('8FdF6cA3-47A7-D13e-8470-cdD3491334FA', 'Angela Thomas','sgfdgfb');
