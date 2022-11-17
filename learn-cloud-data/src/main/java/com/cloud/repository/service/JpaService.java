@@ -35,12 +35,27 @@ public class JpaService {
     }
 
 
-
+    /**
+     * 模糊查询的方法
+     * @param fuzzyQuery query
+     * @return list
+     */
     public List<User> findByFuzzyQuery(String fuzzyQuery) {
-        return null;
+
+        // 第一种方法 使用like，参数左右添加 `%`
+        List<User> users = simpleJpaRepository.findByUsernameLike("%" + fuzzyQuery + "%");
+
+        // 第二种方法 使用自定义sql查询,自定义查询不能使用实体类查询，只能使用 Object 或者 Map 接收
+        List<Object> usersByUsernameLike = simpleJpaRepository.findUsersByUsernameLike(fuzzyQuery);
+
+        // 使用containing
+        users = simpleJpaRepository.findByUsernameContaining(fuzzyQuery);
+
+        return users;
     }
 
     public List<User> findByFuzzyQueryAndOrder(String fuzzyQuery, String sort, boolean ascending) {
+
         return null;
     }
 
