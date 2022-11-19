@@ -5,6 +5,7 @@ import com.cloud.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,8 +56,14 @@ public class JpaService {
     }
 
     public List<User> findByFuzzyQueryAndOrder(String fuzzyQuery, String sort, boolean ascending) {
+        List<User> byUsernameContainingOrderByUsername = simpleJpaRepository.findByUsernameContainingOrderByUsername(fuzzyQuery);
 
-        return null;
+        Sort.Order order = new Sort.Order(ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sort);
+        simpleJpaRepository.findByUsernameContaining(fuzzyQuery, Sort.by(order));
+
+        List<Object> byUsernameOrderByUsername = simpleJpaRepository.getUserBySql("%"+fuzzyQuery+"%", sort);
+
+        return byUsernameContainingOrderByUsername;
     }
 
     /**

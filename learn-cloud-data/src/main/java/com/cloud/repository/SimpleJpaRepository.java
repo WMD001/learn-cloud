@@ -1,6 +1,7 @@
 package com.cloud.repository;
 
 import com.cloud.repository.entity.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -40,4 +41,15 @@ public interface SimpleJpaRepository extends JpaRepository<User, String> {
     List<User> findByUsernameContaining(String username);
 
     List<User> findByUsernameContainingOrderByUsername(String username);
+
+    List<User> findByUsernameContaining(String username, Sort sort);
+
+    /**
+     * TODO 有问题，还没有找到
+     * @param username username
+     * @param field field
+     * @return list
+     */
+    @Query(value = "select id,username,password from db_user where username like ?1 order by ?2", nativeQuery = true)
+    List<Object> getUserBySql(String username, String field);
 }
