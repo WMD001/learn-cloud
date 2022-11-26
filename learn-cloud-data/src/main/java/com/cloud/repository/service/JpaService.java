@@ -4,8 +4,10 @@ import com.cloud.repository.SimpleJpaRepository;
 import com.cloud.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,10 +60,10 @@ public class JpaService {
     public List<User> findByFuzzyQueryAndOrder(String fuzzyQuery, String sort, boolean ascending) {
         List<User> byUsernameContainingOrderByUsername = simpleJpaRepository.findByUsernameContainingOrderByUsername(fuzzyQuery);
 
-        Sort.Order order = new Sort.Order(ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sort);
+        Order order = new Order(ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sort);
         simpleJpaRepository.findByUsernameContaining(fuzzyQuery, Sort.by(order));
 
-        List<Object> byUsernameOrderByUsername = simpleJpaRepository.getUserBySql("%"+fuzzyQuery+"%", sort);
+///        List<Object> byUsernameOrderByUsername = simpleJpaRepository.getByNativeQuery("%"+fuzzyQuery+"%", sort);
 
         return byUsernameContainingOrderByUsername;
     }
@@ -71,14 +73,25 @@ public class JpaService {
      * @param fuzzyQuery 模糊查询
      * @param page 页码
      * @param size 每页条数
-     * @return page page
+     * @return page p
      */
     public Page<User> pageByFuzzyQuery(String fuzzyQuery, int page, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        // 模糊分页查询
+        Page<User> byUsernameContaining = simpleJpaRepository.findByUsernameContaining(fuzzyQuery, pageable);
+
+        // 模糊查询分页后的第一条
+        Page<User> top1ByUsernameContaining = simpleJpaRepository.findTop1ByUsernameContaining(fuzzyQuery, pageable);
+
+        // 模糊查询 Paging query needs to have a Pageable parameter
+        List<User> top10ByUsernameContaining = simpleJpaRepository.findTop10ByUsernameContaining(fuzzyQuery);
+
+        return byUsernameContaining;
     }
 
     /**
      * 分页排序模糊查询
+     * Sort 和 Pageable 不能同时使用，如果分页也需要排序，使用pageable的排序功能
      *
      * @param fuzzyQuery 模糊查询
      * @param sort       排序
@@ -88,7 +101,19 @@ public class JpaService {
      * @return page
      */
     public Page<User> findSortPage(String fuzzyQuery, String sort, boolean ascending, int pageNo, int pageSize) {
-        return null;
+
+        Order order;
+        if (ascending) {
+            order = Order.asc(sort);
+        } else {
+            order = Order.desc(sort);
+        }
+
+        Sort orderBy = Sort.by(order);
+        Pageable pageable = PageRequest.of(pageSize, pageNo, orderBy);
+
+
+        return simpleJpaRepository.findByUsernameContaining(fuzzyQuery, pageable);
     }
 
     // TODO 连表查询
