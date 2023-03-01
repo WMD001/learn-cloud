@@ -1,0 +1,12 @@
+@font-face{
+    font-family: 'JetBrainsMono-LightItalic'; 
+    src: url('./JB/JetBrainsMono-LightItalic.ttf'); 
+}
+
+@font-face{
+    font-family: 'LXGWWenKaiMono-Light'; 
+    src: url('./WK/LXGWWenKaiMono-Light.ttf'); 
+}
+
+.custom-font { font-family: "JetBrainsMono-LightItalic", "LXGWWenKaiMono-Light"}
+
