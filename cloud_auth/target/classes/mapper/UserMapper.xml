@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.wmd.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.wmd.entity.User">
+        <id column="id" property="id"/>
+        <result column="uuid" property="uuid"/>
+        <result column="username" property="username"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="password_hash" property="passwordHash"/>
+        <result column="salt" property="salt"/>
+        <result column="status" property="status"/>
+        <result column="email_verified" property="emailVerified"/>
+        <result column="phone_verified" property="phoneVerified"/>
+        <result column="nickname" property="nickname"/>
+        <result column="avatar" property="avatar"/>
+        <result column="real_name" property="realName"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="last_login_at" property="lastLoginAt"/>
+        <result column="email_verified_at" property="emailVerifiedAt"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uuid, username, email, phone, password_hash, salt, status, email_verified, phone_verified,
+        nickname, avatar, real_name, gender, birthday, created_at, updated_at, last_login_at, email_verified_at
+    </sql>
+
+    <!-- 根据邮箱查询用户 -->
+    <select id="selectByEmail" parameterType="string" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+</mapper>
