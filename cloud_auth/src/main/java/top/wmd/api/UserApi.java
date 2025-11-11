@@ -1,13 +1,17 @@
 package top.wmd.api;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.wmd.entity.User;
 import top.wmd.service.UserService;
 
+
 /**
  * @author WMD001
  */
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserApi {
@@ -22,7 +26,9 @@ public class UserApi {
      * @return 用户信息
      */
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
+    public Object getUser(@PathVariable Long id, HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        log.info("收到调用, header-auth: {}", authorization);
         return userService.getUserById(id);
     }
 
