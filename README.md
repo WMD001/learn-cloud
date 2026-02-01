@@ -12,3 +12,5 @@ Spring Cloud 快速开始
 | Sleuth/zipkin | 链路追踪      |
 | Ribbon/Nginx  | 负载均衡      |
 
+
+文档地址：[微服务-快速实践](https://blog.wmd001.top/2025/11/14/)
